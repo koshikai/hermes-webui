@@ -8106,7 +8106,7 @@ def _run_agent_streaming(
                 _drop_replayed_assistant = (
                     _agent_result_terminal_failure(result)
                     or bool(getattr(agent, '_last_error', None))
-                    or ('error' in result)
+                    or ('error' in result and result.get('error') is not None)
                 )
                 _saved_transcript_lacks_final_answer = _merged_transcript_lacks_final_assistant_answer(
                     _previous_messages,
