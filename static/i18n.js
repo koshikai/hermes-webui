@@ -4027,7 +4027,7 @@ const LOCALES = {
     settings_extensions_installed_tab: 'インストール済み',
     settings_extensions_diagnostics_tab: '診断',
     settings_extensions_gallery_loading: 'ギャラリーを読み込み中…',
-    settings_extensions_gallery_empty: 'レジストリ内に拡張機能が見見つかりません。',
+    settings_extensions_gallery_empty: 'レジストリ内に拡張機能が見つかりません。',
     settings_extensions_gallery_error: 'ギャラリーの読み込みに失敗しました。',
     ext_gallery_install: 'インストール',
     ext_gallery_installing: 'インストール中…',
