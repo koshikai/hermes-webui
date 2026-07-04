@@ -3364,7 +3364,7 @@ const LOCALES = {
     cancelling: 'キャンセル中…',
     cancel_failed: 'キャンセル失敗: ',
     mic_denied: 'マイクへのアクセスが拒否されました。ブラウザの権限を確認してください。',
-    mic_insecure_origin: 'Voice input needs a secure connection. Open Hermes over HTTPS or from localhost to use the microphone.', // TODO: translate
+    mic_insecure_origin: '音声入力にはセキュアな接続が必要です。マイクを使用するには、HTTPS経由またはlocalhostからHermesを開いてください。',
     mic_no_speech: '音声が検出されませんでした。もう一度お試しください。',
     mic_network: '音声認識を利用できません。',
     mic_error: '音声入力エラー: ',
@@ -3963,8 +3963,8 @@ const LOCALES = {
     settings_label_auto_scroll_follow: '新しい内容を自動で追従',
     settings_desc_auto_scroll_follow: '有効にすると、ストリーミング中に画面が自動で一番下までスクロールします。無効にすると、スクロール位置を自分で操作できます。',
     settings_label_render_user_markdown: 'Render markdown in user messages',
-    settings_label_show_titlebar_profile: 'Show profile switcher in titlebar', // TODO: translate
-    settings_desc_show_titlebar_profile: 'When enabled, a profile switcher button appears in the top-left app titlebar so you can change profiles from any tab. Off by default; the composer footer always has a profile switcher regardless of this setting.', // TODO: translate
+    settings_label_show_titlebar_profile: 'タイトルバーにプロファイル切り替えボタンを表示する',
+    settings_desc_show_titlebar_profile: '有効にすると、アプリのタイトルバーの左上にプロファイル切り替えボタンが表示され、どのタブからでもプロファイルを変更できるようになります。デフォルトはオフです。この設定に関わらず、チャット欄のフッターには常にプロファイル切り替えボタンが表示されます。',
     settings_desc_render_user_markdown: 'When enabled, bold, italic, links, and other markdown in your own messages are rendered. Off by default; fenced code blocks and math always render regardless of this setting.',
     settings_label_large_text_paste_as_attachment: 'Attach large pasted text as file',
     settings_desc_large_text_paste_as_attachment: 'When enabled, long pasted text becomes a .md attachment instead of filling the composer.',
@@ -4353,7 +4353,7 @@ const LOCALES = {
     dashboard_loopback_warning: 'ダッシュボードはサーバー上のループバック専用です。サーバー上で閲覧するか、--host 0.0.0.0（安全ではありません）で再起動してください。',
     tab_logs: 'ログ',
     tab_settings: '設定',
-    close_menu: 'Close menu', // TODO: translate
+    close_menu: 'メニューを閉じる',
     new_conversation: '新しい会話',
     filter_conversations: '会話を絞り込み...',
     markdown_table_filter: 'テーブルをフィルター',
