@@ -11760,9 +11760,17 @@ def handle_get(handler, parsed) -> bool:
         # the allowlist, in which case the existing _tN-driven [SLOW] log
         # is the only signal — same as before.
         _diag = RequestDiagnostics.maybe_start("GET", parsed.path, logger=logger, print_fn=getattr(handler, '_safe_webui_print', None))
+        # perf(webui/session-load-latency) tier2c-followup: every early-return
+        # in this handler calls `_diag.finish()` before returning so the
+        # watchdog's _watchdog_pending dict stays bounded to in-flight requests.
+        # Greptile flagged this in PR review — finish() unregisters the
+        # pending watchdog entry; without it the entry stays for the full
+        # 5s slow-request timeout and emits a spurious "Slow WebUI request
+        # still running" log. Idempotent — finish() no-ops if already called.
         query = parse_qs(parsed.query)
         sid = query.get("session_id", [""])[0]
         if not sid:
+            if _diag: _diag.finish()
             return j(handler, {"error": "session_id is required"}, status=400)
         # ?messages=0 skips the message payload for fast session switching.
         # The frontend uses this when switching conversations in the sidebar
@@ -11802,6 +11810,7 @@ def handle_get(handler, parsed) -> bool:
                 if _session_profile:
                     # Valid session owned by a KNOWN other profile: 409 so the
                     # client can offer to switch to it (#5419).
+                    if _diag: _diag.finish()
                     return j(handler, {
                         "error": "Session belongs to a different profile",
                         "code": "session_profile_mismatch",
@@ -11813,6 +11822,7 @@ def handle_get(handler, parsed) -> bool:
                 # fires. _profiles_match coerces None->'default', so a truly
                 # missing/legacy session under a non-default active profile would
                 # otherwise emit a useless 409 with profile=null.
+                if _diag: _diag.finish()
                 return bad(handler, "Session not found", 404)
             original_stream_id = getattr(s, "active_stream_id", None)
             _clear_stale_stream_state(s)
@@ -12150,6 +12160,13 @@ def handle_get(handler, parsed) -> bool:
             if _diag: _diag.finish()
             return resp
         except KeyError:
+            # perf(webui/session-load-latency) tier2c-followup: fire
+            # _diag.finish() in the exception branch too. Greptile flagged
+            # this in PR review — finish() unregisters the pending watchdog
+            # entry; without it the entry stays for the full 5s slow-request
+            # timeout and emits a spurious "Slow WebUI request still
+            # running" log. Idempotent — finish() no-ops if already called.
+            if _diag: _diag.finish()
             # No WebUI sidecar. Delegate to the shared foreign-session
             # synthesizer so GET and POST have symmetric writeable/read-only
             # behaviour for CLI/TUI/Desktop sessions. The helper enforces the
