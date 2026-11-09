@@ -4186,12 +4186,12 @@ const LOCALES = {
     settings_label_transparent_stream_event_timestamps: 'Transparent Stream のイベントタイムスタンプを表示',
     settings_desc_transparent_stream_event_timestamps: '応答フッターの時刻表示は維持したまま、イベントごとのタイムスタンプチップを非表示にします。',
     first_token_time: '最初のトークン出力までの時間',
-    processed_elapsed: _i18nProcessedElapsedEn,
+    processed_elapsed: _i18nProcessedElapsedJa,
     worklog_thinking: '思考中',
     tool_target_skill_suffix: 'スキル',
-    tool_action_label: _i18nToolActionLabelEn,
-    tool_worklog_summary: _i18nToolWorklogSummaryEn,
-    tool_summary_join: _i18nToolSummaryJoinEn,
+    tool_action_label: _i18nToolActionLabelJa,
+    tool_worklog_summary: _i18nToolWorklogSummaryJa,
+    tool_summary_join: _i18nToolSummaryJoinJa,
     done: '完了',
     settings_option_compact_worklog: 'コンパクトワークログ',
     settings_option_transparent_stream: 'トランスペアレントストリーム',
@@ -25870,6 +25870,47 @@ function _i18nToolSummaryJoinCjk(parts) {
   if (items.length <= 1) return items[0] || '';
   if (items.length === 2) return `${items[0]}和${items[1]}`;
   return `${items.slice(0, -1).join('、')}和${items[items.length - 1]}`;
+}
+// Japanese is verb-final, so the object comes first ("<target>を読み込み中")
+// and the shared "<verb> <object>" FromMap helpers do not apply.
+const _I18N_TOOL_ACTION_TEXT_JA = {
+    shell: { running: 'を実行中', done: 'を実行しました', fail: 'の実行に失敗しました', fallback: 'コマンド' },
+    read: { running: 'を読み込み中', done: 'を読み込みました', fail: 'の読み込みに失敗しました', fallback: 'ファイル' },
+    list: { running: 'を一覧表示中', done: 'を一覧表示しました', fail: 'の一覧表示に失敗しました', fallback: 'ファイル' },
+    search: { running: 'を検索中', done: 'を検索しました', fail: 'の検索に失敗しました', fallback: 'コード' },
+    web: { running: 'を確認中', done: 'を確認しました', fail: 'の確認に失敗しました', fallback: 'Web ページ' },
+    write: { running: 'を更新中', done: 'を更新しました', fail: 'の更新に失敗しました', fallback: 'ファイル' },
+    skill: { running: 'を読み込み中', done: 'を読み込みました', fail: 'の読み込みに失敗しました', fallback: 'スキル' },
+    memory: { running: 'を保存中', done: 'を保存しました', fail: 'の保存に失敗しました', fallback: 'メモリ' },
+    delegate: { running: 'を委任中', done: 'を委任しました', fail: 'の委任に失敗しました', fallback: 'タスク' },
+    unknown: { running: 'を実行中', done: 'を実行しました', fail: 'の実行に失敗しました', fallback: 'ツール' },
+};
+const _I18N_TOOL_SUMMARY_TEXT_JA = {
+    shell: { running: ['コマンドを実行中', '{n} 件のコマンドを実行中'], done: ['コマンドを実行しました', '{n} 件のコマンドを実行しました'] },
+    read: { running: ['ファイルを読み込み中', '{n} 件のファイルを読み込み中'], done: ['ファイルを読み込みました', '{n} 件のファイルを読み込みました'] },
+    list: { running: ['ファイルを一覧表示中', '{n} 件を一覧表示中'], done: ['ファイルを一覧表示しました', '{n} 件を一覧表示しました'] },
+    search: { running: ['コードを検索中', 'コードを {n} 回検索中'], done: ['コードを検索しました', 'コードを {n} 回検索しました'] },
+    web: { running: ['Web ページを確認中', 'Web ページを {n} 回確認中'], done: ['Web ページを確認しました', 'Web ページを {n} 回確認しました'] },
+    write: { running: ['ファイルを更新中', '{n} 件のファイルを更新中'], done: ['ファイルを更新しました', '{n} 件のファイルを更新しました'] },
+    skill: { running: ['スキルを読み込み中', '{n} 件のスキルを読み込み中'], done: ['スキルを読み込みました', '{n} 件のスキルを読み込みました'] },
+    memory: { running: ['メモリを保存中', '{n} 件のメモリを保存中'], done: ['メモリを保存しました', '{n} 件のメモリを保存しました'] },
+    delegate: { running: ['タスクを委任中', '{n} 件のタスクを委任中'], done: ['タスクを委任しました', '{n} 件のタスクを委任しました'] },
+    unknown: { running: ['ツールを実行中', '{n} 件のツールを実行中'], done: ['ツールを実行しました', '{n} 件のツールを実行しました'] },
+};
+function _i18nProcessedElapsedJa(duration) {
+  return _i18nProcessedElapsed('処理済み', duration);
+}
+function _i18nToolActionLabelJa(kind, state, target, display, failed) {
+  const verbs = _I18N_TOOL_ACTION_TEXT_JA[kind] || _I18N_TOOL_ACTION_TEXT_JA.unknown;
+  const object = target || verbs.fallback || display || 'ツール';
+  if (failed) return `${object}${verbs.fail}`;
+  return `${object}${verbs[state] || verbs.running}`;
+}
+function _i18nToolWorklogSummaryJa(kind, state, count) {
+  return _i18nToolWorklogSummaryFromMap(_I18N_TOOL_SUMMARY_TEXT_JA, kind, state, count);
+}
+function _i18nToolSummaryJoinJa(parts) {
+  return Array.isArray(parts) ? parts.filter(Boolean).join('、') : '';
 }
 
 const _I18N_TOOL_ACTION_TEXT_VI = {
